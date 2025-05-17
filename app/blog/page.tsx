@@ -13,8 +13,15 @@ async function getPosts() {
   return res.json()
 }
 
+async function getUsers() {
+  const res = await fetch('https://jsonplaceholder.typicode.com/users', {
+    next: { revalidate: 3600 }
+  })
+  return res.json()
+}
+
 export default async function Blog() {
-  const posts = await getPosts()
+  const [posts, users] = await Promise.all([getPosts(), getUsers()])
   
   return (
     <div className="container mx-auto p-4">
