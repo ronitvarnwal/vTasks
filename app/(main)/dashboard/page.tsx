@@ -471,7 +471,7 @@ export default function Dashboard() {
                   ${task.complete ? 'line-through opacity-60' : ''}`}
                   onClick={() => toggleTaskComplete(task.id, 'daily')}
                 >
-                  {task.title} {task.priority}
+                  {task.title}
                 </li>
         </div>
         <button className="bg-zinc-100/80 inset-shadow-xs inset-shadow-zinc-100/25 w-8 h-8 min-w-8 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200"
