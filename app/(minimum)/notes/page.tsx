@@ -1,6 +1,7 @@
 'use client';
 import { supabase } from "@/lib/supabaseClient"
 import { useRouter } from "next/navigation";
+import link from "next/link";
 import { useEffect, useState, useRef } from "react";
 import Navbar from "@/components/navbar"
 
@@ -36,17 +37,19 @@ export default function Notes() {
           return;
         }
         setUser(session.user);
+        await fetchNotes(session.user);
       }
       catch(error) {
         console.error('Auth check error:', error);
         router.push('/login');
       }
     }
-    const fetchNotes = async () => {
+    const fetchNotes = async (currentUser: any) => {
       try{
       const { data, error } = await supabase
       .from('notes')
       .select('*')
+      .eq('user_id', currentUser.id)
       .order('id', { ascending: true })
         
         if(error) {
@@ -66,7 +69,7 @@ export default function Notes() {
       }
     }
     checkAuthAndFetchData();
-    fetchNotes();
+    
   }, [router])
 
   // Improved scroll handling

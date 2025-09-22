@@ -22,7 +22,7 @@ export default function Home() {
   return (
     <>
     <div className="transition-color duration-200 bg-gray-50 px-5 pb-10 pt-30 dark:bg-zinc-950">
-      <h1 className="transition-color duration-300 text-gray-950 tracking-tight text-4xl font-bold tracking-tight dark:text-white">Add tasks to complete them </h1>
+      <h1 className="transition-color duration-300 text-gray-950 tracking-tight text-4xl font-bold tracking-tight dark:text-white">I'm Ronit! the owner BITCH!</h1>
       <p className="transition-all duration-300 text-zinc-500 text-xl mt-7 font-normal tracking-tight dark:text-zinc-400">this website is for adding <span className="text-stone-700 font-medium dark:text-zinc-200">tasks</span> and improveing your <span className="text-stone-700 font-medium dark:text-zinc-200">productivity</span> with simple and clean ui. you can add daily, weekly and monthly tasks as you want. the creator of the website is <span className="text-stone-700 font-medium dark:text-zinc-200">Ronit</span>.</p>
       <div className="flex space-x-5">
       <button className="bg-gray-950 text-zinc-50 w-50 h-10 text-center rounded-xl mt-10 font-medium cursor-pointer transition-all duration-300 focus:bg-gray-900 black-button dark:bg-zinc-50 dark:text-zinc-950">Get started</button>

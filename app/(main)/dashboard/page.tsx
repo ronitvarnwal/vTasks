@@ -2,13 +2,17 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient'
 import { useRouter } from 'next/navigation';
+import Link from 'next/link'
+import CheckButton from '@/components/check-button';
+import TaskAdder from '@/components/task-adder'
+import useTaskStats from '@/hooks/useTaskStats'
 
 type Task = {
-  id: string;
+  id: string | number;
   title: string;
   complete: boolean;
-  priority: 'low' | 'medium' | 'high' | 'urgent';
-  frequency: 'daily' | 'weekly' | 'monthly';
+  priority: 'low' | 'normal' | 'medium' | 'high' | 'urgent';
+  frequency: 'daily' | 'weekly' | 'monthly'; 
 }
 
 export default function Dashboard() {
@@ -22,7 +26,10 @@ export default function Dashboard() {
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
+  const [isOpen1, setIsOpen1] = useState<boolean>(false)
 
+  const stats = useTaskStats(dailyTasks, weeklyTasks, monthlyTasks)
+  
   useEffect(() => {
     const checkAuthAndFetchData = async () => {
       try {
@@ -42,7 +49,8 @@ export default function Dashboard() {
         }
 
         setUser(session.user);
-        await fetchTasks();
+        await fetchTasks(session.user);
+        await fetchNotes(session.user)
       } catch (error) {
         console.error('Auth check error:', error);
         router.push('/login');
@@ -51,15 +59,17 @@ export default function Dashboard() {
       }
     };
 
-    const fetchTasks = async () => {
+    const fetchTasks = async (currentUser: any) => {
       try {
         const { data, error } = await supabase
           .from("todos")
           .select("*")
+          .eq("user_id", currentUser.id)
           .order("id", { ascending: true });
         
+        
         if (error) {
-          console.error("Error fetching tasks:", error);
+          alert(`Error fetching tasks:, ${error}`);
           return;
         }
         
@@ -94,11 +104,12 @@ export default function Dashboard() {
         console.error("Error in fetchTasks:", error);
       }
     };
-    const fetchNotes = async () => {
+    const fetchNotes = async (currentUser: any) => {
       try{
         const { data, error } = await supabase
         .from('notes')
         .select('*')
+        .eq('user_id', currentUser.id)
         .order('id', { ascending: true })
         if(error) {
           console.error("Error fetching notes:", error)
@@ -117,7 +128,7 @@ export default function Dashboard() {
     }
 
     checkAuthAndFetchData();
-    fetchNotes();
+    
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -126,7 +137,7 @@ export default function Dashboard() {
           router.push('/login');
         } else if (event === 'SIGNED_IN' && session?.user) {
           setUser(session.user);
-          fetchTasks();
+          fetchTasks(session.user);
         }
       }
     );
@@ -278,7 +289,7 @@ export default function Dashboard() {
     }
   };
 
-  const toggleTaskComplete = async (taskId: string, frequency: 'daily' | 'weekly' | 'monthly') => {
+  const toggleTaskComplete = async (taskId: string | number, frequency: 'daily' | 'weekly' | 'monthly') => {
     const currentTasks = frequency === 'daily' ? dailyTasks : 
                         frequency === 'weekly' ? weeklyTasks : monthlyTasks;
     
@@ -286,16 +297,7 @@ export default function Dashboard() {
     if (!task) return;
 
     try {
-      const { error } = await supabase
-        .from('todos')
-        .update({ complete: !task.complete })
-        .eq('id', taskId);
-
-      if (error) {
-        console.error("Error updating task:", error);
-        return;
-      }
-
+      
       // Update local state
       if (frequency === 'daily') {
         setDailyTasks(prev => prev.map(t => 
@@ -310,6 +312,15 @@ export default function Dashboard() {
           t.id === taskId ? { ...t, complete: !t.complete } : t
         ));
       }
+      const { error } = await supabase
+        .from('todos')
+        .update({ complete: !task.complete })
+        .eq('id', taskId);
+
+      if (error) {
+        console.error("Error updating task:", error);
+        return;
+      }
     } catch (error) {
       console.error("Error toggling task:", error);
     }
@@ -320,10 +331,60 @@ export default function Dashboard() {
     if (error) {
       console.error('Error signing out:', error);
     } else {
-      router.push('/login');
+      router.push('/');
     }
   };
 
+  const handleTask = (data: Task) => {
+    {data.frequency === "daily" && 
+    setDailyTasks(prev => [
+      ...prev, data
+      
+    ])}
+    {data.frequency === "weekly" && 
+      setWeeklyTasks(prev => [
+        ...prev, data
+      ])}
+    {data.frequency === "monthly" && 
+      setMonthlyTasks(prev => [
+        ...prev, data
+      ])}
+  }
+  const deleteTask = async (taskId: string | number, frequency: string) => {
+    try {
+      {frequency === "daily" &&
+        setDailyTasks(prev => prev.filter(task => task.id !== taskId))
+        }
+      {frequency === "weekly" && setWeeklyTasks(prev => prev.filter(task => task.id !== taskId))
+      }
+      {frequency === "monthly" && setMonthlyTasks(prev => prev.filter(task => task.id !== taskId))
+      }
+      
+      const { error } = await supabase
+        .from('todos')
+        .delete()
+        .eq('id', taskId)
+      
+      if(error) {
+        alert(`Error deleting task:, ${error}`)
+      }
+      
+    }
+    catch (error) {
+      console.error("Error deleting task:", error);
+    }
+  }
+
+  const PriorityStyle = (priority: Task['priority']) => {
+    switch (priority) {
+    case "low" : return "border-green-500 low-task";
+    case "normal" : return "border-zinc-500 normal-task"
+    case "medium" : return "border-yellow-500 medium-task"
+    case "high" : return "border-red-500 high-task"
+    default : return "border-zinc-500 normal-task"
+    }
+  }
+  
   // if (loading) {
   //   return (
   //     <div className="flex items-center justify-center h-screen bg-zinc-50">
@@ -334,26 +395,36 @@ export default function Dashboard() {
 
   return (
     <>
-      <main className="bg-zinc-50 pt-30">
+      
+      <TaskAdder parentIsOpen={isOpen1} onClose={() => setIsOpen1(false)} sendData={handleTask}/>
+      
+      <main className="bg-zinc-50 pt-25">
         <div className="px-5 pb-8 flex justify-between items-center">
           <div>
             <h2 className="text-gray-950 text-3xl font-medium tracking-tight">Welcome to dashboard, </h2>
             <h2 className="text-gray-950 text-3xl font-medium tracking-tight">
-              {localStorage.getItem('name') || user?.email?.split('@')[0] || 'User'}!
+              {localStorage.getItem('name')}!
             </h2>
             <p className="text-zinc-700 text-lg mt-3">Let's be productive today.</p>
           </div>
           
+          
         </div>
         
-        <div className="py-10 space-y-5">
-          <div className="bg-zinc-100/40 border-2 border-white/75 inset-shadow-2xs inset-shadow-zinc-300/40 shadow-sm shadow-zinc-300/50 rounded-3xl px-4 py-5 h-70 mx-5">
-            <div className="flex justify-between">
-            <h3 className="text-2xl text-zinc-800 font-medium tracking-tight">Daily Tasks</h3>
+        <div className="py-5 space-y-5">
+          <div className="bg-zinc-100/40 border-2 border-white/75 inset-shadow-2xs inset-shadow-zinc-300/40 shadow-sm shadow-zinc-300/50 rounded-3xl px-4 pt-5 pb-3 h-auto mx-5">
+            <div className="flex justify-between border-b border-zinc-200/80 pb-4">
+            <h3 className="text-2xl text-zinc-800 font-medium tracking-tight">Tasks</h3>
+              <div className="flex gap-[7px]">
+              <button className="bg-zinc-100/80 border-1 border-white/75 inset-shadow-xs inset-shadow-zinc-100/25 h-9 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200 px-2 flex gap-1" onClick={() => setIsOpen1(true)}>
+               <span className="text-zinc-800 tracking-tighter">add task</span> <span className="text-[27px] font-light pb-[2px] text-zinc-800/95">+</span>
+              </button>
             <button className="bg-zinc-100/80 border-1 border-white/75 inset-shadow-xs inset-shadow-zinc-100/25 w-9 h-9 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200" onClick={() => router.push("/notes")}>
               <img src="/external-link.svg" alt="logo" className="h-4 w-4 opacity-90 ml-[2px]" />
               </button>
+              </div>
             </div>
+            {/*
             <div className="transition-all duration-300 flex items-center dark:border-zinc-600 pt-4 space-x-4">
               <input 
                 type="text" 
@@ -374,19 +445,119 @@ export default function Dashboard() {
                 Add
               </button>
             </div>
-            <ul className="text-zinc-700 px-2 pt-4 text-lg space-y-2">
+             */}
+            {dailyTasks.length === 0 || (
+      <div>
+            <div className="text-zinc-800/90 text-lg tracking-tight font-medium bg-zinc-200/40 rounded-md mt-7 px-2 w-15 text-center">Daily</div>
+            <ul className="text-zinc-700 pt-2 text-lg space-y-2">
+              
               {dailyTasks.map((task) => (
+      <div className="flex justify-between">
+        <div className="flex gap-1">
+      <CheckButton isChecked={task.complete} />
                 <li 
                   key={task.id} 
-                  className={`cursor-pointer ${task.complete ? 'line-through opacity-60' : ''}`}
+                  className={`cursor-pointer dash-task text-ellipsis line-clamp-1 border-l-2
+                  ${PriorityStyle(task.priority)}
+                  ${task.complete ? 'line-through opacity-60' : ''}`}
                   onClick={() => toggleTaskComplete(task.id, 'daily')}
+                >
+                  {task.title} {task.priority}
+                </li>
+        </div>
+        <button className="bg-zinc-100/80 inset-shadow-xs inset-shadow-zinc-100/25 w-8 h-8 min-w-8 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200"
+          onClick={() => deleteTask(task.id, "daily")}>
+          <img src="/delete-icon.svg" alt="logo" className="h-10 w-10 opacity-90" />  </button>
+      </div>
+              ))}
+            </ul>
+          
+            <div className="flex justify-center bg-zinc-200/40 rounded-full h-6 mt-6 px-4 mb-5">
+            <div className="h-2 w-full bg-zinc-300/70 mt-2 rounded-full ">
+              <div className="h-2 bg-zinc-800 rounded-full transition-all duration-300" 
+                style={{ width: `${stats.daily.percentage}%`}}></div>
+            </div>
+         </div>
+      </div>
+      )}
+            {weeklyTasks.length === 0 || (
+            <div className="pt-5 border-t-1 border-zinc-200/80">
+              <div>
+                <div className="text-zinc-800/90 text-lg tracking-tight font-medium bg-zinc-200/40 rounded-md mt-2 px-2 w-20 text-center">Weekly</div>
+                <ul className="text-zinc-700 pt-2 text-lg space-y-2">
+                  {weeklyTasks.map((task) => (
+      <div className="flex justify-between">
+        <div className="flex gap-1">
+      <CheckButton isChecked={task.complete} />
+                <li 
+                  key={task.id} 
+                  className={`cursor-pointer dash-task text-ellipsis line-clamp-1 text-center border-l-2
+                  ${PriorityStyle(task.priority)}
+                  ${task.complete ? 'line-through opacity-60' : ''}`}
+                  onClick={() => toggleTaskComplete(task.id, 'weekly')}
                 >
                   {task.title}
                 </li>
+        </div>
+        <button className="bg-zinc-100/90 inset-shadow-xs inset-shadow-zinc-100/25 w-8 h-8 min-w-8 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200"
+          onClick={() => deleteTask(task.id, "weekly")}>
+          <img src="/delete-icon.svg" alt="logo" className="h-10 w-10 opacity-90" />  </button>
+      </div>
               ))}
-            </ul>
+                </ul>
+                
+            <div className="flex justify-center bg-zinc-200/40 rounded-full h-6 mt-6 px-4 mb-5">
+            <div className="h-2 w-full bg-zinc-300/70 mt-2 rounded-full ">
+              <div className="h-2 bg-zinc-800 rounded-full transition-all duration-300" 
+                style={{ width: `${stats.weekly.percentage}%`}}></div>
+            </div>
+            </div>
+              </div>
+            </div>
+              
+      )}
+            {monthlyTasks.length === 0 || (
+              <div className="pt-5 border-t-1 border-zinc-200/80">
+                <div>
+                  <div className="text-zinc-800/90 text-lg tracking-tight font-medium bg-zinc-200/40 rounded-md mt-2 px-2 w-22 text-center">Monthly</div>
+                  <ul className="text-zinc-700 pt-2 text-lg space-y-2">
+                    {monthlyTasks.map((task) => (
+      <div className="flex justify-between">
+        <div className="flex gap-1">
+      <CheckButton isChecked={task.complete} />
+                <li 
+                  key={task.id} 
+                  className={`cursor-pointer dash-task text-ellipsis line-clamp-1 border-l-2
+                  ${PriorityStyle(task.priority)}
+                  ${task.complete ? 'line-through opacity-60' : ''}`}
+                  onClick={() => toggleTaskComplete(task.id, 'monthly')}
+                >
+                  {task.title}
+                </li>
           </div>
-          
+        <button className="bg-zinc-100/80 inset-shadow-xs inset-shadow-zinc-100/25 w-8 h-8 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200"
+          onClick={() => deleteTask(task.id, "monthly")}>
+          <img src="/delete-icon.svg" alt="logo" className="h-10 w-10 opacity-90" />  </button>
+      </div>
+              ))}
+                  </ul>
+                </div>
+                
+                <div className="flex justify-center bg-zinc-200/40 rounded-full h-6 mt-6 px-4 mb-5">
+                  <div className="h-2 w-full bg-zinc-300/70 mt-2 rounded-full ">
+              <div className="h-2 bg-zinc-800 rounded-full transition-all duration-300" 
+                style={{ width: `${stats.monthly.percentage}%`}}></div>
+            </div>
+                </div>
+              </div>
+              )}
+              </div>
+              
+              
+            
+
+            
+          {/*
           <div className="flex flex-col">
             <div className="w-full p-5 py-10">
               <div className="bg-zinc-100/40 border-2 border-white/75 inset-shadow-2xs inset-shadow-zinc-300/40 shadow-sm shadow-zinc-300/50 rounded-3xl p-4 h-60">
@@ -418,13 +589,16 @@ export default function Dashboard() {
                 </div>
                 <ul className="text-zinc-700 px-2 pt-4 text-lg space-y-2">
                   {weeklyTasks.map((task) => (
+            <div className="flex">
+      <CheckButton isChecked={task.complete} />
                     <li 
                       key={task.id} 
-                      className={`cursor-pointer ${task.complete ? 'line-through opacity-60' : ''}`}
+                      className={`cursor-pointer dash-task ${task.complete ? 'line-through opacity-60' : ''}`}
                       onClick={() => toggleTaskComplete(task.id, 'weekly')}
                     >
                       {task.title}
                     </li>
+            </div>
                   ))}
                 </ul>
               </div>
@@ -460,32 +634,37 @@ export default function Dashboard() {
                 </div>
                 <ul className="text-zinc-700 px-2 pt-4 text-lg space-y-2">
                   {monthlyTasks.map((task) => (
+            <div className="flex gap-1">
+      <CheckButton isChecked={task.complete} />
                     <li 
                       key={task.id} 
-                      className={`cursor-pointer ${task.complete ? 'line-through opacity-60' : ''}`}
+                      className={`cursor-pointer dash-task ${task.complete ? 'line-through opacity-60' : ''}`}
                       onClick={() => toggleTaskComplete(task.id, 'monthly')}
                     >
                       {task.title}
                     </li>
+            </div>
                   ))}
                 </ul>
                 </div>        
             </div>
           </div>
-          
-          <div className="bg-zinc-100/40 border-2 border-white/75 inset-shadow-2xs inset-shadow-zinc-300/40 shadow-sm shadow-zinc-300/50 rounded-3xl p-4 h-120 mx-5">
+          */}
+          <div className="bg-zinc-100/40 border-2 border-white/75 inset-shadow-2xs inset-shadow-zinc-300/40 shadow-sm shadow-zinc-300/50 rounded-3xl p-4 h-auto mx-5">
              <div className="flex justify-between">{/*border-1 border-zinc-300/60 */}
-            <h3 className="text-2xl text-zinc-800 font-medium tracking-tight">Notes</h3>
-              <button className="bg-zinc-100/80 border-1 border-white/75 inset-shadow-xs inset-shadow-zinc-100/25 w-10 h-10 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200" onClick={() => router.push("/notes")}>
+            <h3 className="text-2xl text-zinc-800 font-medium tracking-tight align-middle">Notes</h3>
+               <Link href="/notes">
+              <button className="bg-zinc-100/80 border-1 border-white/75 inset-shadow-xs inset-shadow-zinc-100/25 w-10 h-10 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200">
               <img src="/external-link.svg" alt="logo" className="h-5 w-5 opacity-90 ml-[2px]" />
               </button>
+               </Link>
               </div>
-            <div className="flex py-5 gap-5">
+            <div className="flex py-5 gap-3 flex-wrap">
               {notes.map((note) => (
-  <div className="bg-zinc-100/30 border-2 border-white/60 inset-shadow-xs inset-shadow-zinc-100/30 transition-all duration-200 h-35 w-50 p-3 rounded-2xl flex flex-col justify-between note-box" key={note.id}>
+  <div className="bg-zinc-100/30 border-2 border-white/60 inset-shadow-xs inset-shadow-zinc-100/30 transition-all duration-200 h-35 w-38 p-3 rounded-2xl flex flex-col justify-between note-box" key={note.id} onClick={()=> router.push(`/notes/${note.id}`)}>
     <div className="flex-1">
       <h4 className="text-zinc-800 text-lg font-medium truncate mb-1">{note.title}</h4>
-      <p className="text-zinc-700 overflow-hidden text-ellipsis line-clamp-3">{note.content}</p>
+      <p className="text-zinc-700 overflow-hidden text-ellipsis line-clamp-2">{note.content}</p>
     </div>
     <div className="flex-shrink-0 mt-2">
       <p className="text-zinc-600 text-sm">Jun 6, 2025</p>

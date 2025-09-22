@@ -49,6 +49,7 @@ export default function Signup() {
       // Check if user needs email confirmation
       if (data.user && !data.user.email_confirmed_at) {
         setShowSuccessDialog(true);
+        localStorage.setItem('name', name)
         return;
       }
 
@@ -62,8 +63,10 @@ export default function Signup() {
       alert('An error occurred during signup. Please try again.');
     } finally {
       setIsLoading(false);
+
+      }
     }
-  }
+  
 
   return (
     <>

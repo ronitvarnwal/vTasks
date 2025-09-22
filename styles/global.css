@@ -169,3 +169,21 @@ a {
 .textarea1::placeholder {
   @apply text-lg text-zinc-300;
 }
+.dash-task{
+  @apply transition-all duration-300 px-1 mx-1 pt-[2px]
+}
+.dash-task:hover{
+  @apply rounded-r-lg;
+}
+.low-task:hover{
+  @apply bg-green-100/80
+}
+.normal-task:hover{
+  @apply bg-zinc-100
+}
+.medium-task:hover{
+  @apply bg-yellow-100/80
+}
+.high-task:hover{
+  @apply bg-red-100/80
+}

@@ -26,7 +26,6 @@ export default function Login() {
         return;
       }
       if (data.user) {
-        localStorage.setItem('name', data.user.email?.split('@')[0] || 'user');
         router.push('/dashboard');
       }
     }
