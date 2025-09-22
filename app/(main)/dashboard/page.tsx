@@ -34,6 +34,7 @@ export default function Dashboard() {
   useEffect(() => {
     const name = localStorage.getItem('name')
     setName(name || 'user')
+    
     const checkAuthAndFetchData = async () => {
       try {
         // Check current session
@@ -415,12 +416,12 @@ export default function Dashboard() {
         </div>
         
         <div className="py-5 space-y-5">
-          <div className="bg-zinc-100/40 border-2 border-white/75 inset-shadow-2xs inset-shadow-zinc-300/40 shadow-sm shadow-zinc-300/50 rounded-3xl px-4 pt-5 pb-3 h-auto mx-5">
+          <div className="bg-zinc-100/40 border-2 border-white/75 inset-shadow-2xs inset-shadow-zinc-300/40 shadow-sm shadow-zinc-300/50 rounded-3xl px-4 pt-5 pb-3 h-auto mx-5 min-h-40">
             <div className="flex justify-between border-b border-zinc-200/80 pb-4">
             <h3 className="text-2xl text-zinc-800 font-medium tracking-tight">Tasks</h3>
               <div className="flex gap-[7px]">
               <button className="bg-zinc-100/80 border-1 border-white/75 inset-shadow-xs inset-shadow-zinc-100/25 h-9 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200 px-2 flex gap-1" onClick={() => setIsOpen1(true)}>
-               <span className="text-zinc-800 tracking-tighter">add task</span> <span className="text-[27px] font-light pb-[2px] text-zinc-800/95">+</span>
+               <span className="text-zinc-800 tracking-tighter">Create task</span> <span className="text-[27px] font-light pb-[2px] text-zinc-800/95">+</span>
               </button>
             <button className="bg-zinc-100/80 border-1 border-white/75 inset-shadow-xs inset-shadow-zinc-100/25 w-9 h-9 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200" onClick={() => router.push("/notes")}>
               <img src="/external-link.svg" alt="logo" className="h-4 w-4 opacity-90 ml-[2px]" />
@@ -449,6 +450,11 @@ export default function Dashboard() {
               </button>
             </div>
              */}
+                    {stats.overall.total === 0 && (
+         <div className="flex items-center justify-center h-40 text-lg tracking-tight text-zinc-400 z-100 w-full">
+           <div>no tasks</div>
+         </div>
+          )}
             {dailyTasks.length === 0 || (
       <div>
             <div className="text-zinc-800/90 text-lg tracking-tight font-medium bg-zinc-200/40 rounded-md mt-7 px-2 w-15 text-center">Daily</div>
@@ -653,7 +659,7 @@ export default function Dashboard() {
             </div>
           </div>
           */}
-          <div className="bg-zinc-100/40 border-2 border-white/75 inset-shadow-2xs inset-shadow-zinc-300/40 shadow-sm shadow-zinc-300/50 rounded-3xl p-4 h-auto mx-5">
+          <div className="bg-zinc-100/40 border-2 border-white/75 inset-shadow-2xs inset-shadow-zinc-300/40 shadow-sm shadow-zinc-300/50 rounded-3xl p-4 h-auto mx-5 min-h-60">
              <div className="flex justify-between border-b border-zinc-200/80 pb-4">{/*border-1 border-zinc-300/60 */}
             <h3 className="text-2xl text-zinc-800 font-medium tracking-tight align-middle">Notes</h3>
                <div className="flex gap-[7px]">
@@ -668,6 +674,11 @@ export default function Dashboard() {
                </div>
               </div>
             <div className="flex py-5 gap-3 flex-wrap">
+              {notes.length === 0 && (
+         <div className="flex items-center justify-center h-40 text-lg tracking-tight text-zinc-400 z-100 w-full">
+           <div>no notes</div>
+         </div>
+          )}
               {notes.map((note) => (
   <div className="bg-zinc-100/30 border-2 border-white/60 inset-shadow-xs inset-shadow-zinc-100/30 transition-all duration-200 h-35 w-38 p-3 rounded-2xl flex flex-col justify-between note-box" key={note.id} onClick={()=> router.push(`/notes/${note.id}`)}>
     <div className="flex-1">
