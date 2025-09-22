@@ -25,12 +25,15 @@ export default function Dashboard() {
   const [notes, setNotes] = useState<any[]>([]);
   const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [name, setName] = useState<string>('')
   const router = useRouter();
   const [isOpen1, setIsOpen1] = useState<boolean>(false)
 
   const stats = useTaskStats(dailyTasks, weeklyTasks, monthlyTasks)
   
   useEffect(() => {
+    const name = localStorage.getItem('name')
+    setName(name || 'user')
     const checkAuthAndFetchData = async () => {
       try {
         // Check current session
@@ -403,7 +406,7 @@ export default function Dashboard() {
           <div>
             <h2 className="text-gray-950 text-3xl font-medium tracking-tight">Welcome to dashboard, </h2>
             <h2 className="text-gray-950 text-3xl font-medium tracking-tight">
-              !
+              {name}!
             </h2>
             <p className="text-zinc-700 text-lg mt-3">Let's be productive today.</p>
           </div>
@@ -651,13 +654,18 @@ export default function Dashboard() {
           </div>
           */}
           <div className="bg-zinc-100/40 border-2 border-white/75 inset-shadow-2xs inset-shadow-zinc-300/40 shadow-sm shadow-zinc-300/50 rounded-3xl p-4 h-auto mx-5">
-             <div className="flex justify-between">{/*border-1 border-zinc-300/60 */}
+             <div className="flex justify-between border-b border-zinc-200/80 pb-4">{/*border-1 border-zinc-300/60 */}
             <h3 className="text-2xl text-zinc-800 font-medium tracking-tight align-middle">Notes</h3>
+               <div className="flex gap-[7px]">
+               <button className="bg-zinc-100/80 border-1 border-white/75 inset-shadow-xs inset-shadow-zinc-100/25 h-9 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200 px-2 flex gap-1" onClick={() => setIsOpen1(true)}>
+               <span className="text-zinc-800 tracking-tighter">Create note</span> <span className="text-[27px] font-light pb-[2px] text-zinc-800/95">+</span>
+              </button>
                <Link href="/notes">
-              <button className="bg-zinc-100/80 border-1 border-white/75 inset-shadow-xs inset-shadow-zinc-100/25 w-10 h-10 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200">
-              <img src="/external-link.svg" alt="logo" className="h-5 w-5 opacity-90 ml-[2px]" />
+              <button className="bg-zinc-100/80 border-1 border-white/75 inset-shadow-xs inset-shadow-zinc-100/25 w-9 h-9 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200">
+              <img src="/external-link.svg" alt="logo" className="h-4 w-4 opacity-90 ml-[2px]" />
               </button>
                </Link>
+               </div>
               </div>
             <div className="flex py-5 gap-3 flex-wrap">
               {notes.map((note) => (

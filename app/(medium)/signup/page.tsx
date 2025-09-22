@@ -49,6 +49,7 @@ export default function Signup() {
       // Check if user needs email confirmation
       if (data.user && !data.user.email_confirmed_at) {
         setShowSuccessDialog(true);
+        localStorage.setItem('name', name)
         return;
       }
 
