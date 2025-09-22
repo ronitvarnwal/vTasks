@@ -403,7 +403,7 @@ export default function Dashboard() {
           <div>
             <h2 className="text-gray-950 text-3xl font-medium tracking-tight">Welcome to dashboard, </h2>
             <h2 className="text-gray-950 text-3xl font-medium tracking-tight">
-              {localStorage.getItem('name')}!
+              !
             </h2>
             <p className="text-zinc-700 text-lg mt-3">Let's be productive today.</p>
           </div>

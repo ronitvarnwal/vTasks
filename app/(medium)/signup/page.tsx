@@ -49,13 +49,11 @@ export default function Signup() {
       // Check if user needs email confirmation
       if (data.user && !data.user.email_confirmed_at) {
         setShowSuccessDialog(true);
-        localStorage.setItem('name', name)
         return;
       }
 
       // If signup successful and user is confirmed, redirect to dashboard
       if (data.user) {
-        localStorage.setItem('name', name);
         router.push('/dashboard');
       }
     } catch (error) {
