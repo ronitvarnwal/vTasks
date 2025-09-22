@@ -389,6 +389,7 @@ export default function Dashboard() {
     }
   }
   
+  
   // if (loading) {
   //   return (
   //     <div className="flex items-center justify-center h-screen bg-zinc-50">
@@ -463,10 +464,12 @@ export default function Dashboard() {
               {dailyTasks.map((task) => (
       <div className="flex justify-between">
         <div className="flex gap-1">
+          <div className="flex items-center">
       <CheckButton isChecked={task.complete} />
+          </div>
                 <li 
                   key={task.id} 
-                  className={`cursor-pointer dash-task text-ellipsis line-clamp-1 border-l-2
+                  className={`cursor-pointer dash-task text-ellipsis line-clamp-2 border-l-2
                   ${PriorityStyle(task.priority)}
                   ${task.complete ? 'line-through opacity-60' : ''}`}
                   onClick={() => toggleTaskComplete(task.id, 'daily')}
@@ -474,9 +477,11 @@ export default function Dashboard() {
                   {task.title}
                 </li>
         </div>
-        <button className="bg-zinc-100/80 inset-shadow-xs inset-shadow-zinc-100/25 w-8 h-8 min-w-8 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200"
+        <div className="flex items-center">
+        <button className="bg-zinc-100/90 inset-shadow-xs inset-shadow-zinc-100/25 w-8 h-8 min-w-8 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200"
           onClick={() => deleteTask(task.id, "daily")}>
           <img src="/delete-icon.svg" alt="logo" className="h-10 w-10 opacity-90" />  </button>
+        </div>
       </div>
               ))}
             </ul>
@@ -497,10 +502,12 @@ export default function Dashboard() {
                   {weeklyTasks.map((task) => (
       <div className="flex justify-between">
         <div className="flex gap-1">
+      <div className="flex items-center">
       <CheckButton isChecked={task.complete} />
+          </div>
                 <li 
                   key={task.id} 
-                  className={`cursor-pointer dash-task text-ellipsis line-clamp-1 text-center border-l-2
+                  className={`cursor-pointer dash-task text-ellipsis line-clamp-2 text-center border-l-2
                   ${PriorityStyle(task.priority)}
                   ${task.complete ? 'line-through opacity-60' : ''}`}
                   onClick={() => toggleTaskComplete(task.id, 'weekly')}
@@ -508,9 +515,11 @@ export default function Dashboard() {
                   {task.title}
                 </li>
         </div>
+        <div className="flex items-center">
         <button className="bg-zinc-100/90 inset-shadow-xs inset-shadow-zinc-100/25 w-8 h-8 min-w-8 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200"
           onClick={() => deleteTask(task.id, "weekly")}>
           <img src="/delete-icon.svg" alt="logo" className="h-10 w-10 opacity-90" />  </button>
+        </div>
       </div>
               ))}
                 </ul>
@@ -533,10 +542,12 @@ export default function Dashboard() {
                     {monthlyTasks.map((task) => (
       <div className="flex justify-between">
         <div className="flex gap-1">
+      <div className="flex items-center">
       <CheckButton isChecked={task.complete} />
+          </div>
                 <li 
                   key={task.id} 
-                  className={`cursor-pointer dash-task text-ellipsis line-clamp-1 border-l-2
+                  className={`cursor-pointer dash-task text-ellipsis line-clamp-2 border-l-2
                   ${PriorityStyle(task.priority)}
                   ${task.complete ? 'line-through opacity-60' : ''}`}
                   onClick={() => toggleTaskComplete(task.id, 'monthly')}
@@ -544,9 +555,11 @@ export default function Dashboard() {
                   {task.title}
                 </li>
           </div>
-        <button className="bg-zinc-100/80 inset-shadow-xs inset-shadow-zinc-100/25 w-8 h-8 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200"
+                <div className="flex items-center">
+        <button className="bg-zinc-100/80 inset-shadow-xs inset-shadow-zinc-100/25 w-8 h-8 min-w-8 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200"
           onClick={() => deleteTask(task.id, "monthly")}>
           <img src="/delete-icon.svg" alt="logo" className="h-10 w-10 opacity-90" />  </button>
+                </div>
       </div>
               ))}
                   </ul>
@@ -663,7 +676,7 @@ export default function Dashboard() {
              <div className="flex justify-between border-b border-zinc-200/80 pb-4">{/*border-1 border-zinc-300/60 */}
             <h3 className="text-2xl text-zinc-800 font-medium tracking-tight align-middle">Notes</h3>
                <div className="flex gap-[7px]">
-               <button className="bg-zinc-100/80 border-1 border-white/75 inset-shadow-xs inset-shadow-zinc-100/25 h-9 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200 px-2 flex gap-1" onClick={() => setIsOpen1(true)}>
+               <button className="bg-zinc-100/80 border-1 border-white/75 inset-shadow-xs inset-shadow-zinc-100/25 h-9 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200 px-2 flex gap-1">
                <span className="text-zinc-800 tracking-tighter">Create note</span> <span className="text-[27px] font-light pb-[2px] text-zinc-800/95">+</span>
               </button>
                <Link href="/notes">
