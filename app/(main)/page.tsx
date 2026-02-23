@@ -33,7 +33,7 @@ export default function Home() {
         <h1 className="transition-color duration-300 text-gray-950 tracking-tight text-4xl font-bold text-center px-15 dark:text-white">One Platform. All your todos, tasks, routine, & habits</h1>
         <p className="transition-color duration-300 text-lg text-zinc-500 text-center px-8 pt-8">A great user experience this is our goal-add your daily, weekly, monthly tasks not and achieve your goal.</p>
       </div>
-      <div className="transition-color duration-200 py-5 bg-gray-50 flex space-y-10 flex-wrap py-10 dark:bg-zinc-950">  
+      <div className="transition-color duration-200 py-5 bg-gray-50 flex space-y-10 flex-wrap py-10 justify-center dark:bg-zinc-950">  
         {TaskBoxes.map(TaskBox => (  
       <div className="basis-1/3 flex-auto min-w-115 px-5">
         <div key={TaskBox.title} className="transition-all duration-200 px-8 py-8 h-50 rounded-2xl shadow-md shadow-zinc-300/50 bg-white/35 task-box dark:bg-black/35 dark:shadow-zinc-600/50">  
