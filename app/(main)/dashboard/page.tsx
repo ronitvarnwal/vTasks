@@ -403,28 +403,28 @@ export default function Dashboard() {
       
       <TaskAdder parentIsOpen={isOpen1} onClose={() => setIsOpen1(false)} sendData={handleTask}/>
       
-      <main className="bg-zinc-50 pt-25">
+      <main className="transition-color duration-200 bg-gray-50 pt-25 dark:bg-zinc-950">
         <div className="px-5 pb-8 flex justify-between items-center">
           <div>
-            <h2 className="text-gray-950 text-3xl font-medium tracking-tight">Welcome to dashboard, </h2>
-            <h2 className="text-gray-950 text-3xl font-medium tracking-tight">
+            <h2 className="transition-color duration-300 text-gray-950 text-3xl font-medium tracking-tight dark:text-white">Welcome to dashboard, </h2>
+            <h2 className="transition-color duration-300 text-gray-950 text-3xl font-medium tracking-tight dark:text-white">
               {name}!
             </h2>
-            <p className="text-zinc-700 text-lg mt-3">Let's be productive today.</p>
+            <p className="transition-all duration-300 text-zinc-700 text-lg mt-3 dark:text-zinc-400">Let's be productive today.</p>
           </div>
           
           
         </div>
         
         <div className="py-5 space-y-5">
-          <div className="bg-zinc-100/40 border-2 border-white/75 inset-shadow-2xs inset-shadow-zinc-300/40 shadow-sm shadow-zinc-300/50 rounded-3xl px-4 pt-5 pb-3 h-auto mx-5 min-h-40">
-            <div className="flex justify-between border-b border-zinc-200/80 pb-4">
-            <h3 className="text-2xl text-zinc-800 font-medium tracking-tight">Tasks</h3>
+          <div className="transition-all duration-200 bg-white/35 border-2 border-white/75 inset-shadow-2xs inset-shadow-zinc-300/40 shadow-sm shadow-zinc-300/50 rounded-3xl px-4 pt-5 pb-3 h-auto mx-5 min-h-40 dark:bg-black/35 dark:border-white/10 dark:shadow-zinc-600/50">
+            <div className="flex justify-between border-b border-zinc-200/80 pb-4 dark:border-zinc-700/50">
+            <h3 className="transition-color duration-300 text-2xl text-zinc-800 font-medium tracking-tight dark:text-white">Tasks</h3>
               <div className="flex gap-[7px]">
-              <button className="bg-zinc-100/80 border-1 border-white/75 inset-shadow-xs inset-shadow-zinc-100/25 h-9 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200 px-2 flex gap-1" onClick={() => setIsOpen1(true)}>
-               <span className="text-zinc-800 tracking-tighter">Create task</span> <span className="text-[27px] font-light pb-[2px] text-zinc-800/95">+</span>
+              <button className="transition-all duration-300 bg-zinc-100/80 border-1 border-white/75 inset-shadow-xs inset-shadow-zinc-100/25 h-9 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200 px-2 flex gap-1 dark:bg-zinc-800/80 dark:border-white/10 dark:hover:bg-zinc-700" onClick={() => setIsOpen1(true)}>
+               <span className="transition-color duration-300 text-zinc-800 tracking-tighter dark:text-zinc-100">Create task</span> <span className="text-[27px] font-light pb-[2px] text-zinc-800/95 dark:text-zinc-300">+</span>
               </button>
-            <button className="bg-zinc-100/80 border-1 border-white/75 inset-shadow-xs inset-shadow-zinc-100/25 w-9 h-9 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200" onClick={() => router.push("/notes")}>
+            <button className="transition-all duration-300 bg-zinc-100/80 border-1 border-white/75 inset-shadow-xs inset-shadow-zinc-100/25 w-9 h-9 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200 dark:bg-zinc-800/80 dark:border-white/10 dark:hover:bg-zinc-700" onClick={() => router.push("/notes")}>
               <img src="/external-link.svg" alt="logo" className="h-4 w-4 opacity-90 ml-[2px]" />
               </button>
               </div>
@@ -452,14 +452,14 @@ export default function Dashboard() {
             </div>
              */}
                     {stats.overall.total === 0 && (
-         <div className="flex items-center justify-center h-40 text-lg tracking-tight text-zinc-400 z-100 w-full">
+         <div className="flex items-center justify-center h-40 text-lg tracking-tight text-zinc-400 z-100 w-full dark:text-zinc-500">
            <div>no tasks</div>
          </div>
           )}
             {dailyTasks.length === 0 || (
       <div>
-            <div className="text-zinc-800/90 text-lg tracking-tight font-medium bg-zinc-200/40 rounded-md mt-7 px-2 w-15 text-center">Daily</div>
-            <ul className="text-zinc-700 pt-2 text-lg space-y-2">
+            <div className="transition-color duration-300 text-zinc-800/90 text-lg tracking-tight font-medium bg-zinc-200/40 rounded-md mt-7 px-2 w-15 text-center dark:text-zinc-300 dark:bg-zinc-800/30">Daily</div>
+            <ul className="transition-color duration-300 text-zinc-700 pt-2 text-lg space-y-2 dark:text-zinc-400">
               
               {dailyTasks.map((task) => (
       <div className="flex justify-between">
@@ -478,7 +478,7 @@ export default function Dashboard() {
                 </li>
         </div>
         <div className="flex items-center">
-        <button className="bg-zinc-100/90 inset-shadow-xs inset-shadow-zinc-100/25 w-8 h-8 min-w-8 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200"
+        <button className="transition-all duration-300 bg-zinc-100/90 inset-shadow-xs inset-shadow-zinc-100/25 w-8 h-8 min-w-8 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200 dark:bg-zinc-800/90 dark:hover:bg-zinc-700"
           onClick={() => deleteTask(task.id, "daily")}>
           <img src="/delete-icon.svg" alt="logo" className="h-10 w-10 opacity-90" />  </button>
         </div>
@@ -486,19 +486,19 @@ export default function Dashboard() {
               ))}
             </ul>
           
-            <div className="flex justify-center bg-zinc-200/40 rounded-full h-6 mt-6 px-4 mb-5">
-            <div className="h-2 w-full bg-zinc-300/70 mt-2 rounded-full ">
-              <div className="h-2 bg-zinc-800 rounded-full transition-all duration-300" 
+            <div className="transition-all duration-300 flex justify-center bg-zinc-200/40 rounded-full h-6 mt-6 px-4 mb-5 dark:bg-zinc-800/30">
+            <div className="h-2 w-full bg-zinc-300/70 mt-2 rounded-full dark:bg-zinc-700/50">
+              <div className="h-2 bg-zinc-800 rounded-full transition-all duration-300 dark:bg-zinc-300" 
                 style={{ width: `${stats.daily.percentage}%`}}></div>
             </div>
          </div>
       </div>
       )}
             {weeklyTasks.length === 0 || (
-            <div className="pt-5 border-t-1 border-zinc-200/80">
+            <div className="pt-5 border-t-1 border-zinc-200/80 dark:border-zinc-700/50">
               <div>
-                <div className="text-zinc-800/90 text-lg tracking-tight font-medium bg-zinc-200/40 rounded-md mt-2 px-2 w-20 text-center">Weekly</div>
-                <ul className="text-zinc-700 pt-2 text-lg space-y-2">
+                <div className="transition-color duration-300 text-zinc-800/90 text-lg tracking-tight font-medium bg-zinc-200/40 rounded-md mt-2 px-2 w-20 text-center dark:text-zinc-300 dark:bg-zinc-800/30">Weekly</div>
+                <ul className="transition-color duration-300 text-zinc-700 pt-2 text-lg space-y-2 dark:text-zinc-400">
                   {weeklyTasks.map((task) => (
       <div className="flex justify-between">
         <div className="flex gap-1">
@@ -516,7 +516,7 @@ export default function Dashboard() {
                 </li>
         </div>
         <div className="flex items-center">
-        <button className="bg-zinc-100/90 inset-shadow-xs inset-shadow-zinc-100/25 w-8 h-8 min-w-8 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200"
+        <button className="transition-all duration-300 bg-zinc-100/90 inset-shadow-xs inset-shadow-zinc-100/25 w-8 h-8 min-w-8 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200 dark:bg-zinc-800/90 dark:hover:bg-zinc-700"
           onClick={() => deleteTask(task.id, "weekly")}>
           <img src="/delete-icon.svg" alt="logo" className="h-10 w-10 opacity-90" />  </button>
         </div>
@@ -524,9 +524,9 @@ export default function Dashboard() {
               ))}
                 </ul>
                 
-            <div className="flex justify-center bg-zinc-200/40 rounded-full h-6 mt-6 px-4 mb-5">
-            <div className="h-2 w-full bg-zinc-300/70 mt-2 rounded-full ">
-              <div className="h-2 bg-zinc-800 rounded-full transition-all duration-300" 
+            <div className="transition-all duration-300 flex justify-center bg-zinc-200/40 rounded-full h-6 mt-6 px-4 mb-5 dark:bg-zinc-800/30">
+            <div className="h-2 w-full bg-zinc-300/70 mt-2 rounded-full dark:bg-zinc-700/50">
+              <div className="h-2 bg-zinc-800 rounded-full transition-all duration-300 dark:bg-zinc-300" 
                 style={{ width: `${stats.weekly.percentage}%`}}></div>
             </div>
             </div>
@@ -535,10 +535,10 @@ export default function Dashboard() {
               
       )}
             {monthlyTasks.length === 0 || (
-              <div className="pt-5 border-t-1 border-zinc-200/80">
+              <div className="pt-5 border-t-1 border-zinc-200/80 dark:border-zinc-700/50">
                 <div>
-                  <div className="text-zinc-800/90 text-lg tracking-tight font-medium bg-zinc-200/40 rounded-md mt-2 px-2 w-22 text-center">Monthly</div>
-                  <ul className="text-zinc-700 pt-2 text-lg space-y-2">
+                  <div className="transition-color duration-300 text-zinc-800/90 text-lg tracking-tight font-medium bg-zinc-200/40 rounded-md mt-2 px-2 w-22 text-center dark:text-zinc-300 dark:bg-zinc-800/30">Monthly</div>
+                  <ul className="transition-color duration-300 text-zinc-700 pt-2 text-lg space-y-2 dark:text-zinc-400">
                     {monthlyTasks.map((task) => (
       <div className="flex justify-between">
         <div className="flex gap-1">
@@ -556,7 +556,7 @@ export default function Dashboard() {
                 </li>
           </div>
                 <div className="flex items-center">
-        <button className="bg-zinc-100/80 inset-shadow-xs inset-shadow-zinc-100/25 w-8 h-8 min-w-8 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200"
+        <button className="transition-all duration-300 bg-zinc-100/80 inset-shadow-xs inset-shadow-zinc-100/25 w-8 h-8 min-w-8 rounded-lg flex justify-center items-center overflow-visible hover:bg-zinc-200 dark:bg-zinc-800/90 dark:hover:bg-zinc-700"
           onClick={() => deleteTask(task.id, "monthly")}>
           <img src="/delete-icon.svg" alt="logo" className="h-10 w-10 opacity-90" />  </button>
                 </div>
@@ -565,9 +565,9 @@ export default function Dashboard() {
                   </ul>
                 </div>
                 
-                <div className="flex justify-center bg-zinc-200/40 rounded-full h-6 mt-6 px-4 mb-5">
-                  <div className="h-2 w-full bg-zinc-300/70 mt-2 rounded-full ">
-              <div className="h-2 bg-zinc-800 rounded-full transition-all duration-300" 
+                <div className="transition-all duration-300 flex justify-center bg-zinc-200/40 rounded-full h-6 mt-6 px-4 mb-5 dark:bg-zinc-800/30">
+                  <div className="h-2 w-full bg-zinc-300/70 mt-2 rounded-full dark:bg-zinc-700/50">
+              <div className="h-2 bg-zinc-800 rounded-full transition-all duration-300 dark:bg-zinc-300" 
                 style={{ width: `${stats.monthly.percentage}%`}}></div>
             </div>
                 </div>
