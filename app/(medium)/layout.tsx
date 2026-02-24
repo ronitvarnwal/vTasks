@@ -1,10 +1,7 @@
 import { Providers } from '@/components/provider'
 import Navbar from '@/components/navbar'
 import type { Metadata } from 'next'
-import { Inter, Roboto_Mono } from 'next/font/google'
 import '@/styles/global.css'
-
-const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Next.js App',
@@ -18,7 +15,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      <body>
         <Providers>
           <Navbar />
           {children}
