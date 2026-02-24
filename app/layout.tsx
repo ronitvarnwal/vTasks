@@ -1,9 +1,9 @@
 import { Providers } from '../components/provider'
 import type { Metadata } from 'next'
-import { Inter, Roboto_Mono } from 'next/font/google'
+import { Inter } from 'next/font/google'
 import '../styles/global.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
 export const metadata: Metadata = {
   title: 'Next.js App',
